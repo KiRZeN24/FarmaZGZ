@@ -1,4 +1,10 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 
-@Controller()
-export class PharmacieController {}
+@Controller('pharmacies')
+export class PharmacieController {
+  @Get()
+  getAllPharmacies() {}
+
+  @Get('/:id')
+  getPharmacieById() {}
+}
