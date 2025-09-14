@@ -1,16 +1,16 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
+import { PharmacieService } from '../services/pharmacie.service';
 
 @Controller('pharmacies')
 export class PharmacieController {
+  constructor(private readonly pharmacieService: PharmacieService) {}
   @Get()
   getAllPharmacies() {
-    console.log('test all pharmacies');
-    return 'test all pharmacies';
+    return this.pharmacieService.getAllPharmacies();
   }
 
   @Get('/:id')
-  getPharmacieById(@Param('id') id: string) {
-    console.log(`test pharmacie by id ${id}`);
-    return `test pharmacie by id ${id}`;
+  getPharmacieById(@Param('id', ParseUUIDPipe) id: string) {
+    return this.pharmacieService.getPharmacieById(id);
   }
 }
