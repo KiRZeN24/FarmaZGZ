@@ -1,10 +1,14 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 
 @Controller('pharmacies')
 export class PharmacieController {
   @Get()
-  getAllPharmacies() {}
+  getAllPharmacies() {
+    console.log('test all pharmacies');
+  }
 
   @Get('/:id')
-  getPharmacieById() {}
+  getPharmacieById(@Param('id') id: string) {
+    console.log(`test pharmacie by id ${id}`);
+  }
 }
