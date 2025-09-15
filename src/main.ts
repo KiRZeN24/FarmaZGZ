@@ -6,6 +6,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix('api');
+  app.enableCors({
+    origin: ['https://farmazgz-frontend.vercel.app'],
+    credentials: true,
+  });
   await app.listen(process.env.PORT ?? 3001);
   console.log(
     `FarmaZGZ Backend running on http://localhost:${process.env.PORT ?? 3001}`,
