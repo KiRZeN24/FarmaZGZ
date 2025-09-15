@@ -7,7 +7,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix('api');
   app.enableCors({
-    origin: ['https://farmazgz-frontend.vercel.app'],
+    origin: ['https://farma-zgz-frontend.vercel.app'],
     credentials: true,
   });
   await app.listen(process.env.PORT ?? 3001);
