@@ -5,12 +5,19 @@ import { PharmacieService } from '../services/pharmacie.service';
 export class PharmacieController {
   constructor(private readonly pharmacieService: PharmacieService) {}
   @Get()
-  getAllPharmacies() {
+  async getAllPharmacies() {
     return this.pharmacieService.getAllPharmacies();
   }
 
   @Get('/:id')
-  getPharmacieById(@Param('id', ParseUUIDPipe) id: string) {
+  async getPharmacieById(@Param('id', ParseUUIDPipe) id: string) {
     return this.pharmacieService.getPharmacieById(id);
+  }
+
+  // Endpoint temporal para insertar datos iniciales
+  @Get('seed/initial')
+  async seedData() {
+    await this.pharmacieService.seedInitialData();
+    return { message: 'Datos insertados correctamente' };
   }
 }
