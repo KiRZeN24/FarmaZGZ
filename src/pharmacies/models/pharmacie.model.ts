@@ -26,10 +26,10 @@ export class Pharmacie {
   phone: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 8, nullable: true })
-  latitude: number;
+  latitude: number | null;
 
   @Column({ type: 'decimal', precision: 11, scale: 8, nullable: true })
-  longitude: number;
+  longitude: number | null;
 
   @UpdateDateColumn()
   last_updated: Date;
