@@ -25,11 +25,4 @@ export class PharmacieController {
       pharmacies: pharmacies,
     };
   }
-
-  // Endpoint temporal para datos iniciales
-  @Get('seed/initial')
-  async seedData() {
-    await this.pharmacieService.seedInitialData();
-    return { message: 'Datos insertados correctamente' };
-  }
 }

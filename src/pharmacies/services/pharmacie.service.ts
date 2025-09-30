@@ -124,38 +124,4 @@ export class PharmacieService {
       );
     }
   }
-
-  // Método existente para datos iniciales
-  async seedInitialData(): Promise<void> {
-    const count = await this.pharmacieRepository.count();
-
-    if (count === 0) {
-      const initialData = [
-        {
-          name: 'Farmacia Central',
-          address: 'Calle Mayor, 1',
-          hours: '24 horas',
-          phone: '123456789',
-        },
-        {
-          name: 'Farmacia San Pablo',
-          address: 'Avenida César Augusto, 456',
-          hours: '9:00 - 22:00',
-          phone: '976654321',
-        },
-      ];
-
-      for (const data of initialData) {
-        const pharmacie = new Pharmacie();
-        pharmacie.name = data.name;
-        pharmacie.address = data.address;
-        pharmacie.hours = data.hours;
-        pharmacie.phone = data.phone;
-
-        await this.pharmacieRepository.save(pharmacie);
-      }
-
-      console.log('Datos iniciales insertados en la base de datos');
-    }
-  }
 }
