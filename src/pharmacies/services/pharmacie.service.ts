@@ -66,7 +66,9 @@ export class PharmacieService {
     const apiUrl = `http://www.zaragoza.es/sede/servicio/farmacia.json?tipo=guardia&fecha=${formattedDate}`;
 
     try {
-      console.log(`Sincronizando farmacias del ${formattedDate}...`);
+      console.log(
+        `[${new Date().toISOString()}] Sincronizando farmacias del ${formattedDate}...`,
+      );
 
       const response: AxiosResponse<AyuntamientoApiResponse> =
         await axios.get(apiUrl);
@@ -80,7 +82,6 @@ export class PharmacieService {
       }
 
       const syncedPharmacies: Pharmacie[] = [];
-
       const guardDate = new Date(
         today.getFullYear(),
         today.getMonth(),
@@ -130,13 +131,17 @@ export class PharmacieService {
       }
 
       console.log(
-        `Sincronización completada: ${syncedPharmacies.length} farmacias`,
+        `[${new Date().toISOString()}] Sincronización completada: ${syncedPharmacies.length} farmacias`,
       );
       return syncedPharmacies;
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : 'Error desconocido';
-      console.error('Error al sincronizar con el ayuntamiento:', errorMessage);
+
+      console.error(
+        `[${new Date().toISOString()}] Error al sincronizar con el ayuntamiento:`,
+        errorMessage,
+      );
 
       throw new HttpException(
         'Error al sincronizar farmacias del ayuntamiento',
