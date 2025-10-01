@@ -36,7 +36,24 @@ export class PharmacieService {
     return pharmacie;
   }
 
-  //Sincronizar con API del Ayuntamiento
+  async getTodayGuardPharmacies(): Promise<Pharmacie[]> {
+    const today = new Date();
+    const todayDate = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate(),
+    );
+
+    return this.pharmacieRepository.find({
+      where: {
+        guard_date: todayDate,
+      },
+      order: {
+        name: 'ASC',
+      },
+    });
+  }
+
   async syncWithAyuntamiento(): Promise<Pharmacie[]> {
     const today = new Date();
     const formattedDate = today
@@ -44,35 +61,38 @@ export class PharmacieService {
       .split('T')[0]
       .split('-')
       .reverse()
-      .join('-'); // DD-MM-YYYY
+      .join('-');
 
     const apiUrl = `http://www.zaragoza.es/sede/servicio/farmacia.json?tipo=guardia&fecha=${formattedDate}`;
 
     try {
-      console.log(`🏛️ Sincronizando farmacias del ${formattedDate}...`);
+      console.log(`Sincronizando farmacias del ${formattedDate}...`);
 
       const response: AxiosResponse<AyuntamientoApiResponse> =
         await axios.get(apiUrl);
-
       const apiPharmacies: AyuntamientoPharmacy[] = response.data.result;
 
-      console.log(`📡 Recibidas ${apiPharmacies.length} farmacias de la API`);
+      console.log(`Recibidas ${apiPharmacies.length} farmacias de la API`);
 
       if (apiPharmacies.length === 0) {
-        console.log('⚠️  No hay farmacias de guardia para esta fecha');
+        console.log('No hay farmacias de guardia para esta fecha');
         return [];
       }
 
       const syncedPharmacies: Pharmacie[] = [];
 
+      const guardDate = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate(),
+      );
+
       for (const apiPharmacy of apiPharmacies) {
-        // Buscar si ya existe por external_id
         let pharmacie = await this.pharmacieRepository.findOne({
           where: { external_id: apiPharmacy.id.toString() },
         });
 
         if (!pharmacie) {
-          // Crear nueva farmacia
           pharmacie = new Pharmacie();
           pharmacie.external_id = apiPharmacy.id.toString();
           pharmacie.name = apiPharmacy.title || 'Farmacia sin nombre';
@@ -80,18 +100,16 @@ export class PharmacieService {
           pharmacie.hours = apiPharmacy.guardia.horario || 'Consultar horario';
           pharmacie.phone = apiPharmacy.telefonos || 'No disponible';
 
-          //Coordenadas vienen en geometry.coordinates [lng, lat]
           if (apiPharmacy.geometry && apiPharmacy.geometry.coordinates) {
-            pharmacie.longitude = apiPharmacy.geometry.coordinates[0]; // Longitud (X)
-            pharmacie.latitude = apiPharmacy.geometry.coordinates[1]; // Latitud (Y)
+            pharmacie.longitude = apiPharmacy.geometry.coordinates[0];
+            pharmacie.latitude = apiPharmacy.geometry.coordinates[1];
           } else {
             pharmacie.latitude = null;
             pharmacie.longitude = null;
           }
 
-          console.log(`✨ Nueva farmacia: ${pharmacie.name}`);
+          console.log(`Nueva farmacia: ${pharmacie.name}`);
         } else {
-          // Actualizar datos existentes
           pharmacie.name = apiPharmacy.title || pharmacie.name;
           pharmacie.address = apiPharmacy.calle || pharmacie.address;
           pharmacie.hours = apiPharmacy.guardia.horario || pharmacie.hours;
@@ -102,8 +120,10 @@ export class PharmacieService {
             pharmacie.latitude = apiPharmacy.geometry.coordinates[1];
           }
 
-          console.log(`🔄 Actualizada farmacia: ${pharmacie.name}`);
+          console.log(`Actualizada farmacia: ${pharmacie.name}`);
         }
+
+        pharmacie.guard_date = guardDate;
 
         const savedPharmacie = await this.pharmacieRepository.save(pharmacie);
         syncedPharmacies.push(savedPharmacie);

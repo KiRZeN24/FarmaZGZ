@@ -31,6 +31,9 @@ export class Pharmacie {
   @Column({ type: 'decimal', precision: 11, scale: 8, nullable: true })
   longitude: number | null;
 
+  @Column({ type: 'date', nullable: true })
+  guard_date: Date | null;
+
   @UpdateDateColumn()
   last_updated: Date;
 }

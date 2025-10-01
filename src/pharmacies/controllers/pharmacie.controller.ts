@@ -10,12 +10,21 @@ export class PharmacieController {
     return this.pharmacieService.getAllPharmacies();
   }
 
+  @Get('today')
+  async getTodayGuardPharmacies() {
+    const pharmacies = await this.pharmacieService.getTodayGuardPharmacies();
+    return {
+      date: new Date().toISOString().split('T')[0],
+      count: pharmacies.length,
+      pharmacies: pharmacies,
+    };
+  }
+
   @Get(':id')
   async getPharmacieById(@Param('id') id: string) {
     return this.pharmacieService.getPharmacieById(id);
   }
 
-  //Sincronizar con API del ayuntamiento
   @Post('sync')
   async syncWithAyuntamiento() {
     const pharmacies = await this.pharmacieService.syncWithAyuntamiento();
