@@ -5,6 +5,7 @@ import { PharmaciesModule } from './pharmacies/pharmacies.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ScheduleModule } from '@nestjs/schedule';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { ScheduleModule } from '@nestjs/schedule';
       inject: [ConfigService],
     }),
     PharmaciesModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
