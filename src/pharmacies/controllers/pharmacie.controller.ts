@@ -36,11 +36,6 @@ export class PharmacieController {
     };
   }
 
-  @Get(':id')
-  async getPharmacieById(@Param('id') id: string) {
-    return this.pharmacieService.getPharmacieById(id);
-  }
-
   @Post('sync')
   async syncWithAyuntamiento() {
     const pharmacies = await this.pharmacieService.syncWithAyuntamiento();
@@ -49,5 +44,10 @@ export class PharmacieController {
       count: pharmacies.length,
       pharmacies: pharmacies,
     };
+  }
+
+  @Get(':id')
+  async getPharmacieById(@Param('id') id: string) {
+    return this.pharmacieService.getPharmacieById(id);
   }
 }
