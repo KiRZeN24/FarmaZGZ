@@ -5,12 +5,12 @@ import { userSignDto } from '../dtos/user-sign.dto';
 @Controller('auth')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-  @Post('singup')
+  @Post('signup')
   signUp(@Body() dto: userSignDto) {
     return this.userService.signUp(dto);
   }
 
-  @Post('singin')
+  @Post('signin')
   signIn(@Body() dto: userSignDto) {
     return this.userService.signIn(dto);
   }
