@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Post } from '@nestjs/common';
 import { PharmacieService } from '../services/pharmacie.service';
-import { IsPublic } from 'src/auth/decorators/is-public.decorator';
+import { IsPublic } from '../../auth/decorators/is-public.decorator';
 
 @Controller('pharmacies')
 export class PharmacieController {
