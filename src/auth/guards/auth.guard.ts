@@ -6,8 +6,9 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
+import { Request } from 'express';
 import { IS_PUBLIC_KEY } from '../decorators/is-public.decorator';
-import { JwtPayload, AuthRequest } from '../interfaces/auth.interface';
+import { JwtPayload } from '../interfaces/auth.interface';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -17,9 +18,10 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest<AuthRequest>();
-    const authHeader = (request.headers?.['authorization'] ||
-      request.headers?.['Authorization']) as string | undefined;
+    const request = context
+      .switchToHttp()
+      .getRequest<Request & { user?: JwtPayload }>();
+    const authHeader = request.headers['authorization'];
 
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
@@ -30,20 +32,13 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
-    if (!authHeader) {
+    if (!authHeader || typeof authHeader !== 'string') {
       throw new UnauthorizedException();
     }
 
-    let token: string | undefined;
-
-    if (typeof authHeader === 'string' && authHeader.startsWith('Bearer ')) {
+    let token = authHeader;
+    if (authHeader.startsWith('Bearer ')) {
       token = authHeader.slice(7);
-    } else if (typeof authHeader === 'string') {
-      token = authHeader;
-    }
-
-    if (!token) {
-      throw new UnauthorizedException();
     }
 
     try {
