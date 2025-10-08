@@ -1,0 +1,16 @@
+name: Scheduled Pharmacy Sync
+
+on:
+  schedule:
+    # Ejecuta cada día a las 00:05 UTC
+    - cron: '5 0 * * *'
+
+jobs:
+  sync-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Sync Endpoint
+        uses: fjogeleit/http-request-action@v1.14.1
+        with:
+          url: ${{ secrets.SYNC_URL }}
+          method: 'POST'
