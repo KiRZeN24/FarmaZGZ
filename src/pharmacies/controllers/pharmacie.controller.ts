@@ -1,15 +1,18 @@
 import { Controller, Get, Param, Post } from '@nestjs/common';
 import { PharmacieService } from '../services/pharmacie.service';
+import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 
 @Controller('pharmacies')
 export class PharmacieController {
   constructor(private readonly pharmacieService: PharmacieService) {}
 
+  @IsPublic()
   @Get()
   async getAllPharmacies() {
     return this.pharmacieService.getAllPharmacies();
   }
 
+  @IsPublic()
   @Get('today')
   async getTodayGuardPharmacies() {
     const pharmacies = await this.pharmacieService.getTodayGuardPharmacies();
@@ -35,7 +38,7 @@ export class PharmacieController {
       nextSync: 'Daily at 00:00 AM (Europe/Madrid)',
     };
   }
-
+  @IsPublic()
   @Post('sync')
   async syncWithAyuntamiento() {
     const pharmacies = await this.pharmacieService.syncWithAyuntamiento();
@@ -45,7 +48,7 @@ export class PharmacieController {
       pharmacies: pharmacies,
     };
   }
-
+  @IsPublic()
   @Get(':id')
   async getPharmacieById(@Param('id') id: string) {
     return this.pharmacieService.getPharmacieById(id);

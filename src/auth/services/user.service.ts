@@ -14,6 +14,7 @@ import { hash, compare } from 'bcrypt';
 import { Validation } from '../../validations/models/validation.model';
 import { CreateUserAdminDto } from '../dtos/create-user-admin.dto';
 import { UpdateProfileDto } from '../dtos/update-profile.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserService {
@@ -21,6 +22,7 @@ export class UserService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     @InjectRepository(Validation)
     private readonly validationRepository: Repository<Validation>,
+    private readonly jwtService: JwtService,
   ) {}
   async createUserAdmin(dto: CreateUserAdminDto): Promise<UserOutputDto> {
     const userExists = await this.userRepository.findOne({
@@ -94,7 +96,7 @@ export class UserService {
     return UserOutputDto.fromEntity(user);
   }
 
-  async signIn(dto: userSignDto): Promise<UserOutputDto> {
+  async signIn(dto: userSignDto) {
     const userExists = await this.userRepository.findOne({
       where: { username: dto.username },
     });
@@ -106,7 +108,13 @@ export class UserService {
       throw new UnauthorizedException(`Credenciales incorrectas`);
     }
 
-    return UserOutputDto.fromEntity(userExists);
+    const token = await this.jwtService.signAsync({
+      id: userExists.id,
+      username: userExists.username,
+      role: userExists.role,
+    });
+
+    return { token };
   }
 
   async getAllUsers(): Promise<UserOutputDto[]> {
