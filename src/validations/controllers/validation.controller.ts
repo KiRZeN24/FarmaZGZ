@@ -1,6 +1,9 @@
-import { Controller, Post, Get, Body, Param } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, Req } from '@nestjs/common';
 import { ValidationService } from '../services/validation.service';
 import { CreateValidationDto } from '../dtos/create-validation.dto';
+import { JwtPayload } from '../../auth/interfaces/auth.interface';
+import { Roles } from '../../auth/decorators/roles.decorator';
+import { UserRole } from '../../auth/models/user.model';
 
 @Controller('validations')
 export class ValidationController {
@@ -8,9 +11,11 @@ export class ValidationController {
 
   @Post()
   async createValidation(
-    @Body() dto: CreateValidationDto & { userId: string },
+    @Req() req: Request & { user: JwtPayload },
+    @Body() dto: CreateValidationDto,
   ) {
-    return this.validationService.createValidation(dto.userId, dto);
+    const userId = req.user.id;
+    return this.validationService.createValidation(userId, dto);
   }
 
   @Get('pharmacy/:pharmacyId')
@@ -18,6 +23,7 @@ export class ValidationController {
     return this.validationService.getPharmacyValidations(pharmacyId);
   }
 
+  @Roles(UserRole.ADMIN)
   @Get('user/:userId')
   async getUserValidations(@Param('userId') userId: string) {
     return this.validationService.getUserValidations(userId);

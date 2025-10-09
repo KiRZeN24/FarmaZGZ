@@ -1,16 +1,9 @@
-import {
-  Body,
-  Controller,
-  Post,
-  Put,
-  Get,
-  Param,
-  ParseUUIDPipe,
-} from '@nestjs/common';
+import { Body, Controller, Post, Put, Get, Req } from '@nestjs/common';
 import { UserService } from '../services/user.service';
 import { userSignDto } from '../dtos/user-sign.dto';
-import { UpdateProfileDto } from '../dtos/update-profile.dto';
 import { IsPublic } from '../decorators/is-public.decorator';
+import { JwtPayload } from '../interfaces/auth.interface';
+import { UpdateProfileDto } from '../dtos/update-profile.dto';
 
 @Controller('auth')
 export class UserController {
@@ -28,16 +21,18 @@ export class UserController {
     return this.userService.signIn(dto);
   }
 
-  @Get('profile/:userId')
-  getProfile(@Param('userId', ParseUUIDPipe) userId: string) {
+  @Get('profile')
+  getProfile(@Req() req: Request & { user: JwtPayload }) {
+    const userId = req.user.id;
     return this.userService.getUserById(userId);
   }
 
-  @Put('profile/:userId')
+  @Put('profile')
   updateProfile(
-    @Param('userId', ParseUUIDPipe) userId: string,
+    @Req() req: Request & { user: JwtPayload },
     @Body() dto: UpdateProfileDto,
   ) {
-    return this.userService.updateProfile(userId, dto);
+    const userId = req.user.id;
+    return this.userService.updateUser(userId, dto);
   }
 }
