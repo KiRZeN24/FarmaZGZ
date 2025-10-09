@@ -11,6 +11,7 @@ import {
   AyuntamientoPharmacy,
   AyuntamientoApiResponse,
 } from '../interfaces/ayuntamiento-api.interface';
+import { Validation } from '../../validations/models/validation.model';
 import axios, { AxiosResponse } from 'axios';
 
 @Injectable()
@@ -18,6 +19,8 @@ export class PharmacieService {
   constructor(
     @InjectRepository(Pharmacie)
     private readonly pharmacieRepository: Repository<Pharmacie>,
+    @InjectRepository(Validation)
+    private readonly validationRepository: Repository<Validation>,
   ) {}
 
   async getAllPharmacies(): Promise<Pharmacie[]> {
@@ -111,6 +114,23 @@ export class PharmacieService {
 
           console.log(`Nueva farmacia: ${pharmacie.name}`);
         } else {
+          const hasChanges =
+            pharmacie.name !== (apiPharmacy.title || pharmacie.name) ||
+            pharmacie.address !== (apiPharmacy.calle || pharmacie.address) ||
+            pharmacie.hours !==
+              (apiPharmacy.guardia.horario || pharmacie.hours) ||
+            pharmacie.phone !== (apiPharmacy.telefonos || pharmacie.phone);
+
+          if (hasChanges) {
+            const deletedCount = await this.validationRepository.delete({
+              pharmacyId: pharmacie.id,
+            });
+
+            console.log(
+              `⚠️ Farmacia ${pharmacie.name} modificada - ${deletedCount.affected || 0} validaciones reiniciadas`,
+            );
+          }
+
           pharmacie.name = apiPharmacy.title || pharmacie.name;
           pharmacie.address = apiPharmacy.calle || pharmacie.address;
           pharmacie.hours = apiPharmacy.guardia.horario || pharmacie.hours;
