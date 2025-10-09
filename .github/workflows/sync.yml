@@ -14,3 +14,4 @@ jobs:
         with:
           url: ${{ secrets.SYNC_URL }}
           method: 'POST'
+          timeout: 120000
