@@ -19,7 +19,7 @@ export class Pharmacie {
   @Column({ type: 'varchar', length: 500 })
   address: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'varchar', length: 500, nullable: true })
   hours: string;
 
   @Column({ type: 'varchar', length: 20, nullable: true })

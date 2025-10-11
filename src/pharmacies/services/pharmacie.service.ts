@@ -16,6 +16,9 @@ import axios, { AxiosResponse } from 'axios';
 
 @Injectable()
 export class PharmacieService {
+  private readonly TEXTO_GENERICO =
+    'Además de las Farmacias que figuran en el cartel';
+
   constructor(
     @InjectRepository(Pharmacie)
     private readonly pharmacieRepository: Repository<Pharmacie>,
@@ -91,7 +94,19 @@ export class PharmacieService {
         today.getDate(),
       );
 
+      let filteredCount = 0;
+
       for (const apiPharmacy of apiPharmacies) {
+        const horario = apiPharmacy.guardia.horario || '';
+
+        if (horario.includes(this.TEXTO_GENERICO)) {
+          filteredCount++;
+          console.log(
+            `Ignorando farmacia con texto genérico: ${apiPharmacy.title}`,
+          );
+          continue;
+        }
+
         let pharmacie = await this.pharmacieRepository.findOne({
           where: { external_id: apiPharmacy.id.toString() },
         });
@@ -101,7 +116,7 @@ export class PharmacieService {
           pharmacie.external_id = apiPharmacy.id.toString();
           pharmacie.name = apiPharmacy.title || 'Farmacia sin nombre';
           pharmacie.address = apiPharmacy.calle || 'Dirección no disponible';
-          pharmacie.hours = apiPharmacy.guardia.horario || 'Consultar horario';
+          pharmacie.hours = horario || 'Consultar horario';
           pharmacie.phone = apiPharmacy.telefonos || 'No disponible';
 
           if (apiPharmacy.geometry && apiPharmacy.geometry.coordinates) {
@@ -117,8 +132,7 @@ export class PharmacieService {
           const hasChanges =
             pharmacie.name !== (apiPharmacy.title || pharmacie.name) ||
             pharmacie.address !== (apiPharmacy.calle || pharmacie.address) ||
-            pharmacie.hours !==
-              (apiPharmacy.guardia.horario || pharmacie.hours) ||
+            pharmacie.hours !== (horario || pharmacie.hours) ||
             pharmacie.phone !== (apiPharmacy.telefonos || pharmacie.phone);
 
           if (hasChanges) {
@@ -127,13 +141,13 @@ export class PharmacieService {
             });
 
             console.log(
-              `⚠️ Farmacia ${pharmacie.name} modificada - ${deletedCount.affected || 0} validaciones reiniciadas`,
+              `Farmacia ${pharmacie.name} modificada - ${deletedCount.affected || 0} validaciones reiniciadas`,
             );
           }
 
           pharmacie.name = apiPharmacy.title || pharmacie.name;
           pharmacie.address = apiPharmacy.calle || pharmacie.address;
-          pharmacie.hours = apiPharmacy.guardia.horario || pharmacie.hours;
+          pharmacie.hours = horario || pharmacie.hours;
           pharmacie.phone = apiPharmacy.telefonos || pharmacie.phone;
 
           if (apiPharmacy.geometry && apiPharmacy.geometry.coordinates) {
@@ -151,7 +165,7 @@ export class PharmacieService {
       }
 
       console.log(
-        `[${new Date().toISOString()}] Sincronización completada: ${syncedPharmacies.length} farmacias`,
+        `[${new Date().toISOString()}] Sincronización completada: ${syncedPharmacies.length} farmacias guardadas, ${filteredCount} filtradas`,
       );
       return syncedPharmacies;
     } catch (error) {
