@@ -183,4 +183,32 @@ export class PharmacieService {
       );
     }
   }
+
+  async getPharmacyValidations(pharmacyId: string) {
+    const validations = await this.validationRepository.find({
+      where: { pharmacyId },
+      relations: ['user'],
+      order: { createdAt: 'DESC' },
+    });
+
+    const totalValidations = validations.length;
+    const positiveValidations = validations.filter((v) => v.isValid).length;
+    const negativeValidations = totalValidations - positiveValidations;
+    const accuracyRate =
+      totalValidations > 0
+        ? Math.round((positiveValidations / totalValidations) * 100)
+        : null;
+
+    return {
+      total: totalValidations,
+      positive: positiveValidations,
+      negative: negativeValidations,
+      accuracyRate,
+      validations: validations.slice(0, 5).map((v) => ({
+        isValid: v.isValid,
+        username: v.user.username,
+        createdAt: v.createdAt,
+      })),
+    };
+  }
 }

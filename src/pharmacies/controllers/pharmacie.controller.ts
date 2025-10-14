@@ -53,4 +53,10 @@ export class PharmacieController {
   async getPharmacieById(@Param('id') id: string) {
     return this.pharmacieService.getPharmacieById(id);
   }
+
+  @IsPublic()
+  @Get(':id/validations')
+  async getPharmacyValidations(@Param('id') id: string) {
+    return this.pharmacieService.getPharmacyValidations(id);
+  }
 }
