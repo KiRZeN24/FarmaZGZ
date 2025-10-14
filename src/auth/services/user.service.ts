@@ -76,7 +76,7 @@ export class UserService {
     return UserOutputDto.fromEntity(updatedUser);
   }
 
-  async signUp(dto: userSignDto): Promise<UserOutputDto> {
+  async signUp(dto: userSignDto) {
     const userExists = await this.userRepository.findOne({
       where: { username: dto.username },
     });
@@ -90,10 +90,21 @@ export class UserService {
     const user = this.userRepository.create({
       username: dto.username,
       hashedPassword: await hash(dto.password, 10),
+      role: UserRole.USER,
     });
 
-    await this.userRepository.save(user);
-    return UserOutputDto.fromEntity(user);
+    const savedUser = await this.userRepository.save(user);
+
+    const token = await this.jwtService.signAsync({
+      id: savedUser.id,
+      username: savedUser.username,
+      role: savedUser.role,
+    });
+
+    return {
+      access_token: token,
+      user: UserOutputDto.fromEntity(savedUser),
+    };
   }
 
   async signIn(dto: userSignDto) {
