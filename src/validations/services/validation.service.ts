@@ -60,6 +60,27 @@ export class ValidationService {
     };
   }
 
+  async getMyValidations(userId: string) {
+    const validations = await this.validationRepository.find({
+      where: { userId },
+      relations: ['pharmacy'],
+      order: { createdAt: 'DESC' },
+    });
+
+    // Devolver con pharmacyId explícito para el frontend
+    return validations.map((v) => ({
+      id: v.id,
+      pharmacyId: v.pharmacyId,
+      isValid: v.isValid,
+      createdAt: v.createdAt,
+      pharmacy: {
+        id: v.pharmacy.id,
+        name: v.pharmacy.name,
+        address: v.pharmacy.address,
+      },
+    }));
+  }
+
   async getUserValidations(userId: string): Promise<ValidationOutputDto[]> {
     const validations = await this.validationRepository.find({
       where: { userId },

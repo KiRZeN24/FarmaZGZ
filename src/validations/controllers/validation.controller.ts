@@ -23,6 +23,12 @@ export class ValidationController {
     return this.validationService.getPharmacyValidations(pharmacyId);
   }
 
+  @Get('my-validations')
+  async getMyValidations(@Req() req: Request & { user: JwtPayload }) {
+    const userId = req.user.id;
+    return this.validationService.getMyValidations(userId);
+  }
+
   @Roles(UserRole.ADMIN)
   @Get('user/:userId')
   async getUserValidations(@Param('userId') userId: string) {
