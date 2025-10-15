@@ -1,5 +1,5 @@
 import { Injectable, ConflictException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { MoreThanOrEqual, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Validation } from '../models/validation.model';
 import { CreateValidationDto } from '../dtos/create-validation.dto';
@@ -67,7 +67,6 @@ export class ValidationService {
       order: { createdAt: 'DESC' },
     });
 
-    // Devolver con pharmacyId explícito para el frontend
     return validations.map((v) => ({
       id: v.id,
       pharmacyId: v.pharmacyId,
@@ -89,5 +88,23 @@ export class ValidationService {
     });
 
     return validations.map((v) => ValidationOutputDto.fromEntity(v));
+  }
+
+  async getValidationsStats() {
+    const total = await this.validationRepository.count();
+
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+
+    const today = await this.validationRepository.count({
+      where: {
+        createdAt: MoreThanOrEqual(startOfToday),
+      },
+    });
+
+    return {
+      total,
+      today,
+    };
   }
 }

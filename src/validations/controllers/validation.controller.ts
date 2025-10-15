@@ -29,6 +29,11 @@ export class ValidationController {
     return this.validationService.getMyValidations(userId);
   }
 
+  @Get('stats')
+  async getValidationsStats() {
+    return this.validationService.getValidationsStats();
+  }
+
   @Roles(UserRole.ADMIN)
   @Get('user/:userId')
   async getUserValidations(@Param('userId') userId: string) {
