@@ -1,9 +1,4 @@
-import {
-  IsOptional,
-  IsString,
-  IsEnum,
-  IsStrongPassword,
-} from 'class-validator';
+import { IsOptional, IsString, IsEnum, MinLength } from 'class-validator';
 import { UserRole } from '../models/user.model';
 
 export class UpdateUserDto {
@@ -12,13 +7,8 @@ export class UpdateUserDto {
   username?: string;
 
   @IsOptional()
-  @IsStrongPassword({
-    minLength: 8,
-    minNumbers: 1,
-    minLowercase: 1,
-    minUppercase: 1,
-    minSymbols: 1,
-  })
+  @IsString()
+  @MinLength(8)
   password?: string;
 
   @IsOptional()
