@@ -6,6 +6,7 @@ export class ValidationOutputDto {
     readonly userId: string,
     readonly pharmacyId: string,
     readonly isValid: boolean,
+    readonly validationDate: Date,
     readonly createdAt: Date,
   ) {}
 
@@ -15,6 +16,7 @@ export class ValidationOutputDto {
       validation.userId,
       validation.pharmacyId,
       validation.isValid,
+      validation.validationDate,
       validation.createdAt,
     );
   }
