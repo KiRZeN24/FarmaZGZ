@@ -129,22 +129,6 @@ export class PharmacieService {
 
           console.log(`Nueva farmacia: ${pharmacie.name}`);
         } else {
-          const hasChanges =
-            pharmacie.name !== (apiPharmacy.title || pharmacie.name) ||
-            pharmacie.address !== (apiPharmacy.calle || pharmacie.address) ||
-            pharmacie.hours !== (horario || pharmacie.hours) ||
-            pharmacie.phone !== (apiPharmacy.telefonos || pharmacie.phone);
-
-          if (hasChanges) {
-            const deletedCount = await this.validationRepository.delete({
-              pharmacyId: pharmacie.id,
-            });
-
-            console.log(
-              `Farmacia ${pharmacie.name} modificada - ${deletedCount.affected || 0} validaciones reiniciadas`,
-            );
-          }
-
           pharmacie.name = apiPharmacy.title || pharmacie.name;
           pharmacie.address = apiPharmacy.calle || pharmacie.address;
           pharmacie.hours = horario || pharmacie.hours;
@@ -208,6 +192,7 @@ export class PharmacieService {
         isValid: v.isValid,
         username: v.user.username,
         createdAt: v.createdAt,
+        validationDate: v.validationDate,
       })),
     };
   }
