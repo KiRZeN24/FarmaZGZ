@@ -5,11 +5,13 @@ import {
   CreateDateColumn,
   ManyToOne,
   JoinColumn,
+  Index,
 } from 'typeorm';
 import { User } from '../../auth/models/user.model';
 import { Pharmacie } from '../../pharmacies/models/pharmacie.model';
 
 @Entity('validations')
+@Index(['userId', 'pharmacyId', 'validationDate'], { unique: true })
 export class Validation {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -22,6 +24,9 @@ export class Validation {
 
   @Column({ type: 'boolean' })
   isValid: boolean;
+
+  @Column({ type: 'date' })
+  validationDate: Date;
 
   @CreateDateColumn()
   createdAt: Date;
