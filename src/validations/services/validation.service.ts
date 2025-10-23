@@ -16,21 +16,28 @@ export class ValidationService {
     userId: string,
     dto: CreateValidationDto,
   ): Promise<ValidationOutputDto> {
+    const validationDate = new Date(dto.guardDate);
+    validationDate.setHours(0, 0, 0, 0);
+
     const existingValidation = await this.validationRepository.findOne({
       where: {
         userId,
         pharmacyId: dto.pharmacyId,
+        validationDate,
       },
     });
 
     if (existingValidation) {
-      throw new ConflictException('Ya has validado esta farmacia');
+      throw new ConflictException(
+        'Ya has validado esta farmacia para esta fecha de guardia',
+      );
     }
 
     const validation = this.validationRepository.create({
       userId,
       pharmacyId: dto.pharmacyId,
       isValid: dto.isValid,
+      validationDate,
     });
 
     await this.validationRepository.save(validation);
@@ -41,6 +48,7 @@ export class ValidationService {
     const validations = await this.validationRepository.find({
       where: { pharmacyId },
       relations: ['user'],
+      order: { createdAt: 'DESC' },
     });
 
     const totalValidations = validations.length;
@@ -72,6 +80,7 @@ export class ValidationService {
       pharmacyId: v.pharmacyId,
       isValid: v.isValid,
       createdAt: v.createdAt,
+      validationDate: v.validationDate,
       pharmacy: {
         id: v.pharmacy.id,
         name: v.pharmacy.name,
