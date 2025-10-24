@@ -117,7 +117,7 @@ export class PharmacieService {
           pharmacie.name = apiPharmacy.title || 'Farmacia sin nombre';
           pharmacie.address = apiPharmacy.calle || 'Dirección no disponible';
           pharmacie.hours = horario || 'Consultar horario';
-          pharmacie.phone = apiPharmacy.telefonos || 'No disponible';
+          pharmacie.phone = apiPharmacy.telefonos || 'No disponible'.trim();
 
           if (apiPharmacy.geometry && apiPharmacy.geometry.coordinates) {
             pharmacie.longitude = apiPharmacy.geometry.coordinates[0];
@@ -132,7 +132,7 @@ export class PharmacieService {
           pharmacie.name = apiPharmacy.title || pharmacie.name;
           pharmacie.address = apiPharmacy.calle || pharmacie.address;
           pharmacie.hours = horario || pharmacie.hours;
-          pharmacie.phone = apiPharmacy.telefonos || pharmacie.phone;
+          pharmacie.phone = apiPharmacy.telefonos || pharmacie.phone.trim();
 
           if (apiPharmacy.geometry && apiPharmacy.geometry.coordinates) {
             pharmacie.longitude = apiPharmacy.geometry.coordinates[0];

@@ -22,7 +22,7 @@ export class Pharmacie {
   @Column({ type: 'varchar', length: 500, nullable: true })
   hours: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   phone: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 8, nullable: true })
