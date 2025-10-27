@@ -1,17 +1,30 @@
-import { IsOptional, IsString, IsEnum, MinLength } from 'class-validator';
+import {
+  IsOptional,
+  IsString,
+  IsEnum,
+  MinLength,
+  Matches,
+} from 'class-validator';
 import { UserRole } from '../models/user.model';
 
 export class UpdateUserDto {
   @IsOptional()
-  @IsString()
+  @IsString({ message: 'El nombre de usuario debe ser un texto' })
+  @MinLength(3, {
+    message: 'El nombre de usuario debe tener al menos 3 caracteres',
+  })
   username?: string;
 
   @IsOptional()
-  @IsString()
-  @MinLength(8)
+  @IsString({ message: 'La contraseña debe ser un texto' })
+  @MinLength(8, { message: 'La contraseña debe tener al menos 8 caracteres' })
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/, {
+    message:
+      'La contraseña debe contener al menos una mayúscula, una minúscula, un número y un carácter especial',
+  })
   password?: string;
 
   @IsOptional()
-  @IsEnum(UserRole)
+  @IsEnum(UserRole, { message: 'El rol debe ser USER o ADMIN' })
   role?: UserRole;
 }
