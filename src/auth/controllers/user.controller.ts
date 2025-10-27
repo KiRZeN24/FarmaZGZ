@@ -1,6 +1,7 @@
 import { Body, Controller, Post, Put, Get, Req } from '@nestjs/common';
 import { UserService } from '../services/user.service';
-import { userSignDto } from '../dtos/user-sign.dto';
+import { LoginDto } from '../dtos/login.dto';
+import { RegisterDto } from '../dtos/register.dto';
 import { IsPublic } from '../decorators/is-public.decorator';
 import { JwtPayload } from '../interfaces/auth.interface';
 import { UpdateProfileDto } from '../dtos/update-profile.dto';
@@ -11,13 +12,13 @@ export class UserController {
 
   @IsPublic()
   @Post('signup')
-  signUp(@Body() dto: userSignDto) {
+  signUp(@Body() dto: RegisterDto) {
     return this.userService.signUp(dto);
   }
 
   @IsPublic()
   @Post('signin')
-  signIn(@Body() dto: userSignDto) {
+  signIn(@Body() dto: LoginDto) {
     return this.userService.signIn(dto);
   }
 
@@ -33,6 +34,6 @@ export class UserController {
     @Body() dto: UpdateProfileDto,
   ) {
     const userId = req.user.id;
-    return this.userService.updateUser(userId, dto);
+    return this.userService.updateProfile(userId, dto);
   }
 }
