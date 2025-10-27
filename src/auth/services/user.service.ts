@@ -7,7 +7,8 @@ import {
 import { Repository } from 'typeorm';
 import { User, UserRole } from '../models/user.model';
 import { InjectRepository } from '@nestjs/typeorm';
-import { userSignDto } from '../dtos/user-sign.dto';
+import { LoginDto } from '../dtos/login.dto';
+import { RegisterDto } from '../dtos/register.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 import { UserOutputDto } from '../dtos/user-output.dto';
 import { hash, compare } from 'bcrypt';
@@ -76,7 +77,7 @@ export class UserService {
     return UserOutputDto.fromEntity(updatedUser);
   }
 
-  async signUp(dto: userSignDto) {
+  async signUp(dto: RegisterDto) {
     const userExists = await this.userRepository.findOne({
       where: { username: dto.username },
     });
@@ -107,7 +108,7 @@ export class UserService {
     };
   }
 
-  async signIn(dto: userSignDto) {
+  async signIn(dto: LoginDto) {
     const userExists = await this.userRepository.findOne({
       where: { username: dto.username },
     });
