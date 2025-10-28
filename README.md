@@ -1,98 +1,335 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# FarmaZGZ - Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API REST para gestionar farmacias de guardia en Zaragoza. Desarrollada con NestJS, TypeScript y PostgreSQL.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+[![NestJS](https://img.shields.io/badge/NestJS-11-red)](https://nestjs.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-blue)](https://www.postgresql.org/)
 
-## Description
+## ✨ Características
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- 🔄 **Sincronización automática** con API del Ayuntamiento de Zaragoza
+- 🔐 **Autenticación JWT** con roles (USER/ADMIN)
+- ✅ **Sistema de validaciones** por usuario y fecha
+- 📊 **Estadísticas** de validaciones
+- 🛡️ **Guards y decoradores** personalizados
+- 🗄️ **TypeORM** para gestión de base de datos
 
-## Project setup
+## 🚀 Tecnologías
 
-```bash
-$ npm install
-```
+- **Framework:** NestJS 11
+- **Lenguaje:** TypeScript
+- **Base de datos:** PostgreSQL 17
+- **ORM:** TypeORM
+- **Autenticación:** JWT + bcrypt
+- **Validación:** class-validator + class-transformer
+- **HTTP Client:** Axios
 
-## Compile and run the project
+## 📋 Requisitos previos
 
-```bash
-# development
-$ npm run start
+- Node.js 18.x o superior
+- PostgreSQL 17.x o superior
+- npm o yarn
 
-# watch mode
-$ npm run start:dev
+## 🛠️ Instalación
 
-# production mode
-$ npm run start:prod
-```
+1. **Clonar el repositorio:**
 
-## Run tests
+git clone https://github.com/KiRZeN24/FarmaZGZ.git
 
-```bash
-# unit tests
-$ npm run test
+cd farmazgz-backend
 
-# e2e tests
-$ npm run test:e2e
+2. **Instalar dependencias:**
 
-# test coverage
-$ npm run test:cov
-```
+npm install
 
-## Deployment
+3. **Configurar base de datos:**
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+Crea una base de datos PostgreSQL:
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+CREATE DATABASE farmazgz;
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+4. **Configurar variables de entorno:**
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Crea un archivo `.env` en la raíz:
 
-## Resources
+Database
 
-Check out a few resources that may come in handy when working with NestJS:
+DB_HOST=localhost
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+DB_PORT=5432
 
-## Support
+DB_USERNAME=postgres
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+DB_PASSWORD=tu_password
 
-## Stay in touch
+DB_DATABASE=farmazgz
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+JWT
 
-## License
+JWT_SECRET=tu_secret_key
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Server
+
+PORT=3001
+
+5. **Ejecutar migraciones (si existen):**
+
+npm run typeorm migration:run
+
+6. **Ejecutar en desarrollo:**
+
+npm run start:dev
+
+La API estará disponible en `http://localhost:3001`
+
+## 🔐 Autenticación
+
+### JWT Strategy
+
+La API utiliza JWT (JSON Web Tokens) para autenticación:
+
+// Payload del token
+{
+id: string,
+username: string,
+role: 'USER' | 'ADMIN'
+}
+
+### Roles y permisos
+
+- **USER:** Endpoints básicos (ver farmacias, validar)
+- **ADMIN:** Todos los endpoints + gestión de usuarios y sincronización
+
+### Guards personalizados
+
+@Roles(UserRole.ADMIN) // Requiere rol ADMIN
+
+@IsPublic() // Endpoint público
+
+## 📚 Documentación de API
+
+### Autenticación
+
+#### Registrarse
+
+POST /auth/signup
+
+Content-Type: application/json
+
+{
+"username": "usuario",
+"password": "ExamplePassword123!"
+}
+
+#### Iniciar sesión
+
+POST /auth/signin
+
+Content-Type: application/json
+
+{
+"username": "usuario",
+"password": "Password123!"
+}
+
+**Respuesta:**
+
+{
+"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+
+#### Obtener perfil
+
+GET /auth/profile
+
+Authorization: Bearer {token}
+
+#### Actualizar perfil
+
+PUT /auth/profile
+
+Authorization: Bearer {token}
+
+Content-Type: application/json
+
+{
+"password": "NewPassword123!"
+}
+
+### Farmacias
+
+#### Obtener farmacias de hoy
+
+GET /pharmacies/today
+
+#### Obtener detalle de farmacia
+
+GET /pharmacies/:id
+
+#### Obtener validaciones de una farmacia
+
+GET /pharmacies/:id/validations
+
+#### Sincronizar con API del Ayuntamiento (Admin)
+
+POST /pharmacies/sync
+
+Authorization: Bearer {admin_token}
+
+### Validaciones
+
+#### Crear validación
+
+POST /validations
+
+Authorization: Bearer {token}
+
+Content-Type: application/json
+
+{
+"pharmacyId": "uuid",
+"isValid": true,
+"guardDate": "2025-10-28"
+}
+
+#### Mis validaciones
+
+GET /validations/my-validations
+
+Authorization: Bearer {token}
+
+### Usuarios (Admin)
+
+#### Listar usuarios
+
+GET /users
+
+Authorization: Bearer {admin_token}
+
+#### Crear usuario
+
+POST /users
+
+Authorization: Bearer {admin_token}
+
+Content-Type: application/json
+
+{
+"username": "nuevo_usuario",
+"password": "Password123!",
+"role": "USER"
+}
+
+#### Actualizar usuario
+
+PUT /users/:id
+
+Authorization: Bearer {admin_token}
+
+Content-Type: application/json
+
+{
+"username": "nuevo_nombre",
+"role": "ADMIN"
+}
+
+#### Eliminar usuario
+
+DELETE /users/:id
+
+Authorization: Bearer {admin_token}
+
+## 🗄️ Modelos de datos
+
+### User
+
+{
+id: string (UUID)
+username: string
+hashedPassword: string
+role: 'USER' | 'ADMIN'
+createdAt: Date
+}
+
+### Pharmacy
+
+{
+id: string (UUID)
+external_id: string
+name: string
+address: string
+phone: string
+hours: string
+latitude: number | null
+longitude: number | null
+guard_date: Date
+last_updated: Date
+}
+
+### Validation
+
+{
+id: string (UUID)
+userId: string
+pharmacyId: string
+isValid: boolean
+validationDate: Date
+createdAt: Date
+}
+
+## 🔄 Sincronización con API del Ayuntamiento
+
+El sistema sincroniza automáticamente las farmacias desde:
+
+http://www.zaragoza.es/sede/servicio/farmacia.json?tipo=guardia&fecha=DD-MM-YYYY
+
+**Características:**
+
+- Filtra farmacias con texto genérico
+- Actualiza datos existentes
+- Preserva historial de validaciones
+- Índice único por `(userId, pharmacyId, validationDate)`
+
+## 🛡️ Seguridad
+
+### Validación de contraseñas
+
+- Mínimo 8 caracteres
+- Al menos 1 mayúscula
+- Al menos 1 minúscula
+- Al menos 1 número
+- Al menos 1 carácter especial
+
+### Hash de contraseñas
+
+Utiliza bcrypt con 10 rondas de salt:
+
+const hashedPassword = await hash(password, 10);
+
+### CORS
+
+Configurado para aceptar peticiones del frontend:
+
+app.enableCors({
+origin: 'http://localhost:3001',
+credentials: true,
+});
+
+## 📊 Base de datos
+
+### Migración inicial
+
+Si usas migraciones, crea una con:
+
+npm run typeorm migration:generate -- -n InitialMigration
+
+npm run typeorm migration:run
+
+### Sincronización automática
+
+En desarrollo, TypeORM sincroniza automáticamente:
+
+synchronize: true // Solo para desarrollo
+
+⚠️ **En producción usa migraciones**
