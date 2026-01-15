@@ -1,0 +1,17 @@
+name: Keep Backend Alive
+
+on:
+  schedule:
+    # Ejecuta cada 10 minutos
+    - cron: '*/10 * * * *'
+
+jobs:
+  ping-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Today Endpoint
+        uses: fjogeleit/http-request-action@v1.14.1
+        with:
+          url: 'https://farmazgz.onrender.com/api/pharmacies/today'
+          method: 'GET'
+          timeout: 30000
