@@ -14,4 +14,4 @@ jobs:
         with:
           url: 'https://farmazgz.onrender.com/api/pharmacies/today'
           method: 'GET'
-          timeout: 30000
+          timeout: 300000
